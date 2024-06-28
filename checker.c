@@ -7,36 +7,36 @@
 #define SOC_MAX 80
 #define CHARGE_RATE_MAX 0.8
 
-int isTemperatureOk(float temperature) {
-    return (temperature >= TEMP_MIN && temperature <= TEMP_MAX);
-}
+typedef struct {
+    float min;
+    float max;
+    const char* name;
+} Range;
 
-int isSocOk(float soc) {
-    return (soc >= SOC_MIN && soc <= SOC_MAX);
-}
+const Range TEMP_RANGE = {TEMP_MIN, TEMP_MAX, "Temperature"};
+const Range SOC_RANGE = {SOC_MIN, SOC_MAX, "State of Charge"};
+const Range CHARGE_RATE_RANGE = {0, CHARGE_RATE_MAX, "Charge Rate"};
 
-int isChargeRateOk(float chargeRate) {
-    return (chargeRate <= CHARGE_RATE_MAX);
+int isInRange(float value, Range range) {
+    return (value >= range.min && value <= range.max);
 }
 
 void printWarning(const char* message) {
     printf("%s out of range!\n", message);
 }
 
-int batteryIsOk(float temperature, float soc, float chargeRate) {
-    if (!isTemperatureOk(temperature)) {
-        printWarning("Temperature");
-        return 0;
-    }
-    if (!isSocOk(soc)) {
-        printWarning("State of Charge");
-        return 0;
-    }
-    if (!isChargeRateOk(chargeRate)) {
-        printWarning("Charge Rate");
+int checkAndWarn(float value, Range range) {
+    if (!isInRange(value, range)) {
+        printWarning(range.name);
         return 0;
     }
     return 1;
+}
+
+int batteryIsOk(float temperature, float soc, float chargeRate) {
+    return checkAndWarn(temperature, TEMP_RANGE) &&
+           checkAndWarn(soc, SOC_RANGE) &&
+           checkAndWarn(chargeRate, CHARGE_RATE_RANGE);
 }
 
 int main() {
