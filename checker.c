@@ -1,33 +1,32 @@
 #include <stdio.h>
 #include <assert.h>
 
-int isTemperatureOutOfRange(float temperature) {
- if (temperature < 0 || temperature > 45) {
-     printf("Temperature out of range!\n");
-     return 1;
- }
- return 0;
-}
+typedef struct {
+ const char* parameter;
+ float value;
+ float lower;
+ float upper;
+} ParameterCheck;
 
-int isSocOutOfRange(float soc) {
- if (soc < 20 || soc > 80) {
-     printf("State of Charge out of range!\n");
-     return 1;
- }
- return 0;
-}
-
-int isChargeRateOutOfRange(float chargeRate) {
- if (chargeRate > 0.8) {
-     printf("Charge Rate out of range!\n");
+int isOutOfRange(const ParameterCheck* param) {
+ if (param->value < param->lower || param->value > param->upper) {
+     printf("%s out of range!\n", param->parameter);
      return 1;
  }
  return 0;
 }
 
 int batteryIsOk(float temperature, float soc, float chargeRate) {
- if (isTemperatureOutOfRange(temperature) || isSocOutOfRange(soc) || isChargeRateOutOfRange(chargeRate)) {
-     return 0;
+ ParameterCheck checks[] = {
+     {"Temperature", temperature, 0, 45},
+     {"State of Charge", soc, 20, 80},
+     {"Charge Rate", chargeRate, 0, 0.8}
+ };
+
+ for (int i = 0; i < sizeof(checks) / sizeof(checks[0]); i++) {
+     if (isOutOfRange(&checks[i])) {
+         return 0;
+     }
  }
  return 1;
 }
