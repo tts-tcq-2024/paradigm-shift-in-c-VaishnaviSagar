@@ -19,32 +19,28 @@ typedef enum {
 BatteryStatus mapToBatteryStatus(float value, float lower, float upper) {
     if (value < lower) {
         return LOW_SOC_BREACH;
-    } else if (value >= lower && value <= lower + 3) {
-        return LOW_SOC_WARNING;
-    } else if (value > lower + 3 && value < upper - 5) {
-        return NORMAL;
-    } else if (value >= upper - 5 && value <= upper) {
-        return HIGH_SOC_WARNING;
-    } else {
-        return HIGH_SOC_BREACH;
     }
+    if (value >= lower && value <= lower + 3) {
+        return LOW_SOC_WARNING;
+    }
+    if (value > lower + 3 && value < upper - 5) {
+        return NORMAL;
+    }
+    if (value >= upper - 5 && value <= upper) {
+        return HIGH_SOC_WARNING;
+    }
+    return HIGH_SOC_BREACH;
 }
 
 const char* getStatusMessage(BatteryStatus status, const char* parameter) {
-    switch (status) {
-        case LOW_SOC_BREACH:
-            return "Low %s - Breach";
-        case LOW_SOC_WARNING:
-            return "Low %s - Warning";
-        case NORMAL:
-            return "Normal %s";
-        case HIGH_SOC_WARNING:
-            return "High %s - Warning";
-        case HIGH_SOC_BREACH:
-            return "High %s - Breach";
-        default:
-            return "Unknown Status";
-    }
+    const char* messages[] = {
+        "Low %s - Breach",
+        "Low %s - Warning",
+        "Normal %s",
+        "High %s - Warning",
+        "High %s - Breach"
+    };
+    return messages[status];
 }
 
 void printStatusMessage(const char* parameter, float value, float lower, float upper) {
