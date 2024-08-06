@@ -15,13 +15,4 @@ BatteryStatus mapToBatteryStatus(float value, float lower, float upper) {
     return HIGH_SOC_BREACH;
 }
 
-const char* getStatusMessage(BatteryStatus status, const char* parameter) {
-    const char* messages[] = {
-        "Low %s - Breach",
-        "Low %s - Warning",
-        "Normal %s",
-        "High %s - Warning",
-        "High %s - Breach"
-    };
-    return messages[status];
-}
+
