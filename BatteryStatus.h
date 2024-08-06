@@ -1,4 +1,5 @@
-#include <stdio.h>
+#ifndef BATTERYSTATUS_H
+#define BATTERYSTATUS_H
 typedef enum {
     LOW_SOC_BREACH,
     LOW_SOC_WARNING,
