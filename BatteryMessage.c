@@ -17,3 +17,24 @@ int batteryIsOk(float temperature, float soc, float chargeRate) {
 
     return 1;
 }
+To add language translation, you can modify the `getStatusMessage` function to take an additional parameter for the language and use a switch statement to return the message in the appropriate language. Here's an example of how you can modify the `getStatusMessage` function to include language translation:
+
+```c
+const char* getStatusMessage(BatteryStatus status, const char* parameter, const char* language) {
+    switch (status) {
+        case LOW_SOC_BREACH:
+            if (strcmp(language, "en") == 0) {
+                return "Low %s - Breach";
+            } else if (strcmp(language, "fr") == 0) {
+                return "Faible %s - Violation";
+            }
+            // Add more language cases as needed
+        case LOW_SOC_WARNING:
+            // Handle language translation for other statuses
+        default:
+            return "Unknown Status";
+    }
+}
+const char* language = "en"; // Set the language to English
+const char* message = getStatusMessage(status, parameter, language);
+printf(message, parameter);
